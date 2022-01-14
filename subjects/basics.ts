@@ -13,4 +13,8 @@ const number2 = 3.8
 const printResult = true
 const resultPhrase = 'Result is: '
 
+
+number3
+
+
 add(number1, number2, printResult, resultPhrase)
