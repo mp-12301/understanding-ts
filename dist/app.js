@@ -21,6 +21,9 @@ function validate(validatableInput) {
     if (validatableInput.min != null && typeof validatableInput.value === 'number') {
         isValid = isValid && validatableInput.value > validatableInput.min;
     }
+    if (validatableInput.max != null && typeof validatableInput.value === 'number') {
+        isValid = isValid && validatableInput.value < validatableInput.max;
+    }
     return isValid;
 }
 // autobind decorator
@@ -35,7 +38,23 @@ function autobind(_target, _methodName, descriptor) {
     };
     return adjDescriptor;
 }
-// validator decorator
+// ProjectList Class
+class ProjectList {
+    constructor(type) {
+        this.type = type;
+        this.templateElement = document.getElementById('project-list');
+        this.hostElement = document.getElementById('app');
+        const importedNode = document.importNode(this.templateElement.content, true);
+        this.element = importedNode.firstElementChild;
+        this.element.id = `${this.type}-projects`;
+        this.attach();
+    }
+    renderContent() {
+    }
+    attach() {
+        this.hostElement.insertAdjacentElement('beforeend', this.element);
+    }
+}
 // ProjectInput Class
 class ProjectInput {
     constructor() {
@@ -54,7 +73,24 @@ class ProjectInput {
         const enteredTitle = this.titleInputElement.value;
         const enteredDescription = this.descriptionInputElement.value;
         const enteredPeople = this.peopleInputElement.value;
-        if (validate({ value: enteredTitle, required: true, minLength: 5 })
+        const titleValidatable = {
+            value: enteredTitle,
+            required: true
+        };
+        const descriptionValidatable = {
+            value: enteredDescription,
+            required: true,
+            minLength: 5
+        };
+        const peopleValidatable = {
+            value: +enteredPeople,
+            required: true,
+            min: 1,
+            max: 5
+        };
+        if (!validate(titleValidatable) ||
+            !validate(descriptionValidatable) ||
+            !validate(peopleValidatable)
         // enteredTitle.trim().length === 0 ||
         // enteredDescription.trim().length === 0 ||
         // enteredPeople.trim().length === 0
